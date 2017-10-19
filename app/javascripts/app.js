@@ -15,20 +15,22 @@ window.App = {
     Drolot.setProvider(new Web3.providers.HttpProvider("http://localhost:8545"));
 
     Drolot.deployed().then(function(instance) {
-	var drolot = instance;
-	console.log(instance);
-	var new_player_event = drolot.NewPlayer();
+	console.log(instance.contract.address);
+
+	var new_player_event = instance.NewPlayer();
 	new_player_event.watch(function(error, result){
-		if (!error)
-			console.log(result);
+		var textnode = document.createTextNode(result.args._from);
+		document.getElementById("players").appendChild(textnode);
 	});
 
-	var winner_event = drolot.Winner();
+	var winner_event = instance.Winner();
 
 	winner_event.watch(function(error, result){
 		if (!error)
 			console.log(result);
 	});
+
+	document.getElementById("contract").innerHTML = instance.contract.address;
     });
   }
 };
