@@ -4,6 +4,7 @@
 // Import libraries we need.
 import { default as Web3} from 'web3';
 import { default as contract } from 'truffle-contract'
+import { default as $} from 'jquery'
 
 // Import our contract artifacts and turn them into usable abstractions.
 import json from '../../build/contracts/Drolot.json'
@@ -30,7 +31,8 @@ window.App = {
 			console.log(result);
 	});
 
-	document.getElementById("contract").innerHTML = instance.contract.address;
+	$("#contract-address").append(instance.contract.address);
+	$("#contract-owner").append(instance.contract.owner);
     });
   }
 };

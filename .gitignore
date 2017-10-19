@@ -2,6 +2,3 @@ node_modules
 build
 *.swp
 
-.babelrc
-.eslintignore
-.eslintrc
