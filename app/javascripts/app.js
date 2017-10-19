@@ -16,25 +16,36 @@ window.App = {
     Drolot.setProvider(new Web3.providers.HttpProvider("http://localhost:8545"));
 
     Drolot.deployed().then(function(instance) {
-	console.log(instance.contract.address);
+	console.log(instance.contract);
 
 	var new_player_event = instance.NewPlayer();
 	new_player_event.watch(function(error, result){
-		var textnode = document.createTextNode(result.args._from);
-		document.getElementById("players").appendChild(textnode);
+		self.addPlayer(result.args._from);
 	});
 
 	var winner_event = instance.Winner();
 
 	winner_event.watch(function(error, result){
-		if (!error)
-			console.log(result);
+		self.addWinner(result.args._winner);
 	});
 
 	$("#contract-address").append(instance.contract.address);
 	$("#contract-owner").append(instance.contract.owner);
+
+	var nplayers = instance.contract.num_players.call().valueOf();
+	for(var i=0; i < nplayers; i++){
+		self.addPlayer(instance.contract.players.call(i));
+	}
     });
-  }
+  },
+
+    addPlayer: function(player) {
+	$("#players").append(`<div>${player}</div>`);
+    },
+
+    addWinner: function(winner) {
+	$("#winner").append(`<div>Winner is ${winner}</div>`);
+    }
 };
 
 
