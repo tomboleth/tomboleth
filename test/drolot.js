@@ -1,14 +1,18 @@
-var MetaCoin = artifacts.require("./MetaCoin.sol");
+var Drolot = artifacts.require("./Drolot.sol");
+var value = web3.toWei(0.1, "ether"); 
 
-contract('MetaCoin', function(accounts) {
-  it("should put 10000 MetaCoin in the first account", function() {
-    return MetaCoin.deployed().then(function(instance) {
-      return instance.getBalance.call(accounts[0]);
+contract('Drolot', function(accounts) {
+  it("should send 100 finney from the first account", function() {
+    return Drolot.deployed().then(function(instance) {
+      var from = accounts[0];
+      var to = instance.contract.address;
+      web3.eth.sendTransaction({ from: from, to: to, value: value });
+      return web3.eth.getBalance(instance.contract.address);
     }).then(function(balance) {
-      assert.equal(balance.valueOf(), 10000, "10000 wasn't in the first account");
+      assert.equal(balance.toNumber(), value, "transfer went wrong");
     });
   });
-  it("should call a function that depends on a linked library", function() {
+/*  it("should call a function that depends on a linked library", function() {
     var meta;
     var metaCoinBalance;
     var metaCoinEthBalance;
@@ -61,4 +65,5 @@ contract('MetaCoin', function(accounts) {
       assert.equal(account_two_ending_balance, account_two_starting_balance + amount, "Amount wasn't correctly sent to the receiver");
     });
   });
+*/
 });

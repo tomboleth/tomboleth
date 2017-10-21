@@ -29,9 +29,11 @@ contract Withdrawable is Owned{
 
 contract Drolot is Owned, Withdrawable {
 	address[10] public players;
-	uint public num_players = 0;
+	uint public numPlayers = 0;
 	uint public bet = 100 finney;
 	uint public lot = 990 finney;
+	uint nextBet = 0;
+	uint nextLot = 0;
 
 	event NewPlayer(
 		address indexed _from
@@ -45,25 +47,30 @@ contract Drolot is Owned, Withdrawable {
 		require(msg.value == bet);
 		insert(msg.sender);
 		NewPlayer(msg.sender);
-		if (num_players == 10){
+		if (numPlayers == 10){
 			address winner = dro();
 			pendingWithdrawals[winner] += lot;
 			Winner(winner);
 			clear();
+			if (nextBet != 0){
+				bet = nextBet;
+				lot = nextLot;
+				nextBet = 0;
+			}
 		}
 	}
 
 	function changeRules(uint newBet, uint newLot) {
-		bet = newBet;
-		lot = newLot;
+		nextBet = newBet;
+		nextLot = newLot;
 	}
 
 	function insert(address player) internal {
-		players[num_players++] = player;
+		players[numPlayers++] = player;
 	}
 
 	function clear() internal {
-		num_players = 0;
+		numPlayers = 0;
 	}
 
 	function dro() internal returns (address winner){
