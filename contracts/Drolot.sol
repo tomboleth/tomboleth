@@ -4,7 +4,7 @@ pragma solidity ^0.4.4;
 contract Owned {
     address public owner; // set internal ?
 
-    function owned() { owner = msg.sender; }
+    function Owned() { owner = msg.sender; }
     function close() onlyOwner {suicide(owner);}
 
     modifier onlyOwner {

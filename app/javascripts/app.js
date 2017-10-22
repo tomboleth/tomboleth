@@ -13,7 +13,8 @@ var Drolot = contract(json);
 window.App = {
   start: function() {
     var self = this;
-    Drolot.setProvider(new Web3.providers.HttpProvider("http://localhost:8545"));
+    //var web3 = new Web3.providers.HttpProvider("http://localhost:8545")
+    Drolot.setProvider(web3.currentProvider);
 
     Drolot.deployed().then(function(instance) {
 	console.log(instance.contract);
@@ -21,6 +22,7 @@ window.App = {
 	var new_player_event = instance.NewPlayer();
 	new_player_event.watch(function(error, result){
 		self.addPlayer(result.args._from);
+                self.refreshBalance(web3.eth.getBalance(instance.contract.address));
 	});
 
 	var winner_event = instance.Winner();
@@ -30,14 +32,22 @@ window.App = {
 	});
 
 	$("#contract-address").append(instance.contract.address);
-	$("#contract-owner").append(instance.contract.owner);
+	$("#contract-owner").append(instance.contract.owner.call());
 
-	var nplayers = instance.contract.num_players.call().valueOf();
+
+        self.refreshBalance(web3.eth.getBalance(instance.contract.address));
+
+	var nplayers = instance.contract.numPlayers.call().valueOf();
 	for(var i=0; i < nplayers; i++){
 		self.addPlayer(instance.contract.players.call(i));
 	}
     });
   },
+
+    refreshBalance: function(balance) {
+	$("#contract-balance").children().remove();
+	$("#contract-balance").append(`<div>${balance}</div>`);
+    },
 
     addPlayer: function(player) {
 	$("#players").append(`<div>${player}</div>`);
@@ -50,6 +60,16 @@ window.App = {
 
 
 window.addEventListener('load', function() {
+	// Checking if Web3 has been injected by the browser (Mist/MetaMask)
+	if (typeof web3 !== 'undefined') {
+		console.warn("Using web3 detected from external source. If you find that your accounts don't appear or you have 0 MetaCoin, ensure you've configured that source properly. If using MetaMask, see the following link. Feel free to delete this warning. :) http://truffleframework.com/tutorials/truffle-and-metamask")
+		// Use Mist/MetaMask's provider
+		window.web3 = new Web3(web3.currentProvider);
+	} else {
+		console.warn("No web3 detected. Falling back to http://localhost:8545. You should remove this fallback when you deploy live, as it's inherently insecure. Consider switching to Metamask for development. More info here: http://truffleframework.com/tutorials/truffle-and-metamask");
+		// fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
+		window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+	}
 	App.start();
 });
 
