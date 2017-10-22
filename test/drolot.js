@@ -9,9 +9,25 @@ contract('Drolot', function(accounts) {
       web3.eth.sendTransaction({ from: from, to: to, value: value });
       return web3.eth.getBalance(instance.contract.address);
     }).then(function(balance) {
-      assert.equal(balance.toNumber(), value, "transfer went wrong");
+      assert.equal(balance.valueOf(), value*1, "transfer went wrong");
     });
   });
+
+  it("should send 100 finney from other accounts", function() {
+    return Drolot.deployed().then(function(instance) {
+      var to = instance.contract.address;
+      for (var i = 1; i < 10; i++){
+	      var from = accounts[i];
+      	      web3.eth.sendTransaction({ from: from, to: to, value: value });
+      }
+      return web3.eth.getBalance(instance.contract.address);
+    }).then(function(balance) {
+      assert.equal(balance.valueOf(), value*10, "transfer went wrong");
+    });
+  });
+
+
+
 /*  it("should call a function that depends on a linked library", function() {
     var meta;
     var metaCoinBalance;
