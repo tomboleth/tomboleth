@@ -40,21 +40,38 @@ contract Drolot is Owned, Withdrawable {
 	uint nextLot = 0;
 
 	event NewPlayer(
-		address indexed _from
+		address _from
 	);
 
 	event Winner(
-		address indexed _winner
+		address indexed _winner,
+                bytes12 indexed message
 	);
 
 	function () payable{
 		require(msg.value == bet);
-		insert(msg.sender);
-		NewPlayer(msg.sender);
+		play(msg.sender);	
+	}
+
+	function playWithWinnings(){
+		require(pendingWithdrawals[msg.sender] >= bet);
+		pendingWithdrawals[msg.sender] -= bet;
+		play(msg.sender);	
+	}
+
+	function changeRules(uint newBet, uint newLot) {
+		nextBet = newBet;
+		nextLot = newLot;
+	}
+
+	function play(address sender) internal{
+		insert(sender);
+		NewPlayer(sender);
 		if (numPlayers == 10){
 			address winner = dro();
 			pendingWithdrawals[winner] += lot;
-			Winner(winner);
+			bytes12 message = "drolotWinner";
+			Winner(winner, message);
 			clear();
 			if (nextBet != 0){
 				bet = nextBet;
@@ -62,11 +79,6 @@ contract Drolot is Owned, Withdrawable {
 				nextBet = 0;
 			}
 		}
-	}
-
-	function changeRules(uint newBet, uint newLot) {
-		nextBet = newBet;
-		nextLot = newLot;
 	}
 
 	function insert(address player) internal {

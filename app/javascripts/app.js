@@ -62,14 +62,14 @@ window.App = {
 	}
 
         /* All the winners */
-       /* var filter = web3.eth.filter({fromBlock: instance.contract.birthBlock.call(), toBlock: 'latest', address: instance.contract.address, topics: [null, "0x64726f6c6f7457696e6e65720000000000000000000000000000000000000000", null]});
-        filter.get(function(error, result){
-		                           console.log(error, result); });*/
+       var filter = web3.eth.filter({fromBlock: instance.contract.birthBlock.call(), toBlock: 'latest', address: instance.contract.address, topics: [null, null, "0x64726f6c6f7457696e6e65720000000000000000000000000000000000000000"]});
+        filter.watch(function(error, result){
+		self.addAllWinner((result.topics[1]));
+		                           });
     });
 
   },
 
-	
     cleanPlayerBalance: function() {
         $("#player-balance").children().remove();
     },
@@ -89,6 +89,10 @@ window.App = {
 
     addWinner: function(winner) {
 	$("#winner").append(`<div>Winner is ${winner}</div>`);
+    },
+
+    addAllWinner: function(winner) {
+	$("#all-winners").append(`<div>${winner}</div>`);
     }
 };
 
