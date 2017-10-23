@@ -19,32 +19,66 @@ window.App = {
     Drolot.deployed().then(function(instance) {
 	console.log(instance.contract);
 
+        /* Events listener from contract */
+
 	var new_player_event = instance.NewPlayer();
 	new_player_event.watch(function(error, result){
 		self.addPlayer(result.args._from);
-                self.refreshBalance(web3.eth.getBalance(instance.contract.address));
+                self.refreshBankBalance(web3.eth.getBalance(instance.contract.address));
 	});
 
 	var winner_event = instance.Winner();
 
 	winner_event.watch(function(error, result){
+		console.log(result);
 		self.addWinner(result.args._winner);
 	});
+
+	
+	/* Event listener for input */
+
+        $('#player-balance-address').each(function() {
+            var elem = $(this);
+            elem.bind("propertychange change click keyup input paste", function(event){
+                self.cleanPlayerBalance();
+                if (web3.isAddress(elem.val().trim())){
+                   self.refreshPlayerBalance(web3.fromWei(instance.contract.pendingWithdrawals.call(elem.val().trim()), "ether"));
+    	        }
+            });
+        });
+
+	/* */
 
 	$("#contract-address").append(instance.contract.address);
 	$("#contract-owner").append(instance.contract.owner.call());
 
 
-        self.refreshBalance(web3.eth.getBalance(instance.contract.address));
+        self.refreshBankBalance(web3.eth.getBalance(instance.contract.address));
 
+        /* Players in current game */
 	var nplayers = instance.contract.numPlayers.call().valueOf();
 	for(var i=0; i < nplayers; i++){
 		self.addPlayer(instance.contract.players.call(i));
 	}
+
+        /* All the winners */
+       /* var filter = web3.eth.filter({fromBlock: instance.contract.birthBlock.call(), toBlock: 'latest', address: instance.contract.address, topics: [null, "0x64726f6c6f7457696e6e65720000000000000000000000000000000000000000", null]});
+        filter.get(function(error, result){
+		                           console.log(error, result); });*/
     });
+
   },
 
-    refreshBalance: function(balance) {
+	
+    cleanPlayerBalance: function() {
+        $("#player-balance").children().remove();
+    },
+
+    refreshPlayerBalance: function(address) {
+	$("#player-balance").append(`<div>${address}</div>`);
+    },
+
+    refreshBankBalance: function(balance) {
 	$("#contract-balance").children().remove();
 	$("#contract-balance").append(`<div>${balance}</div>`);
     },

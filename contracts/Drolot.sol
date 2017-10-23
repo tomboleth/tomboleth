@@ -2,9 +2,13 @@ pragma solidity ^0.4.4;
 
 
 contract Owned {
+    uint public birthBlock;
     address public owner; // set internal ?
 
-    function Owned() { owner = msg.sender; }
+    function Owned() {
+	    owner = msg.sender;
+	    birthBlock = block.number;
+    }
     function close() onlyOwner {suicide(owner);}
 
     modifier onlyOwner {
@@ -14,7 +18,7 @@ contract Owned {
 }
 
 contract Withdrawable is Owned{
-	mapping (address => uint) pendingWithdrawals;
+	mapping (address => uint) public pendingWithdrawals;
 
 	function withdraw() {
 		uint amount = pendingWithdrawals[msg.sender];
