@@ -40,7 +40,8 @@ contract Drolot is Owned, Withdrawable {
 	uint nextLot = 0;
 
 	event NewPlayer(
-		address _from
+		address _from,
+		uint _nplayers
 	);
 
 	event Winner(
@@ -66,7 +67,7 @@ contract Drolot is Owned, Withdrawable {
 
 	function play(address sender) internal{
 		insert(sender);
-		NewPlayer(sender);
+		NewPlayer(sender, numPlayers);
 		if (numPlayers == 10){
 			address winner = dro();
 			pendingWithdrawals[winner] += lot;

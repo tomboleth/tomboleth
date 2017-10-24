@@ -23,6 +23,9 @@ window.App = {
 
 	var new_player_event = instance.NewPlayer();
 	new_player_event.watch(function(error, result){
+		if (result.args._nplayers == 1){
+			self.clearGame();
+		}
 		self.addPlayer(result.args._from);
                 self.refreshBankBalance(web3.eth.getBalance(instance.contract.address));
 	});
@@ -81,6 +84,11 @@ window.App = {
     refreshBankBalance: function(balance) {
 	$("#contract-balance").children().remove();
 	$("#contract-balance").append(`<div>${balance}</div>`);
+    },
+
+    clearGame: function(player) {
+	$("#players").empty();
+        $("#winner").empty();
     },
 
     addPlayer: function(player) {
