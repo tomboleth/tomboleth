@@ -4,7 +4,10 @@
 // Import libraries we need.
 import { default as Web3} from 'web3';
 import { default as contract } from 'truffle-contract'
+import { default as UIkit} from 'uikit'
+import { default as Icons} from 'uikit/dist/js/uikit-icons'
 import { default as $} from 'jquery'
+//import jpg from './app/images/head.jpg'
 
 // Import our contract artifacts and turn them into usable abstractions.
 import json from '../../build/contracts/Drolot.json'

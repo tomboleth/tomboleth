@@ -2,11 +2,15 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
+		<link rel="stylesheet" href="node_modules/uikit/dist/css/uikit.min.css">
 		<script type="text/javascript" src="app.js"></script>
 	</head>
 	<body>
-		<h1>Hello</h1>
-		<div id="contract-address"></div>		
+		<div class="uk-inline uk-align-center">
+			<img class="uk-animation-scale-up" src="images/head.jpg" alt="">
+			<h1 class="uk-text-center uk-overlay-default uk-position-bottom"><span>Play Tomboleth and win Ether !</span></h1>
+		</div>
+		<div>Send 0.1 ether to <strong id="contract-address"></strong></div>		
 		<div id="contract-owner"></div>		
 		<div id="contract-balance"></div>		
 		<div id="player-balance-div">
