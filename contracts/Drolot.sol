@@ -19,6 +19,7 @@ contract Owned {
 
 contract Withdrawable is Owned{
 	mapping (address => uint) public pendingWithdrawals;
+	uint bank = 0;
 
 	function withdraw() {
 		uint amount = pendingWithdrawals[msg.sender];
@@ -27,17 +28,19 @@ contract Withdrawable is Owned{
 	}
 
 	function getBank() onlyOwner {
-		msg.sender.transfer(this.balance);
+		msg.sender.transfer(bank);
 	}
 }
 
 contract Drolot is Owned, Withdrawable {
 	address[10] public players;
 	uint public numPlayers = 0;
+	uint public maxPlayers = 10 ;
 	uint public bet = 100 finney;
 	uint public lot = 990 finney;
 	uint nextBet = 0;
 	uint nextLot = 0;
+	uint nextMaxPlayers = 0;
 
 	event NewPlayer(
 		address _from,
@@ -60,33 +63,36 @@ contract Drolot is Owned, Withdrawable {
 		play(msg.sender);	
 	}
 
-	function changeRules(uint newBet, uint newLot) {
+	function changeRules(uint newBet, uint newLot, uint newMaxPlayers) {
 		nextBet = newBet;
 		nextLot = newLot;
+		nextMaxPlayers = newMaxPlayers;
 	}
 
 	function play(address sender) internal{
-		insert(sender);
+		insertPlayer(sender);
 		NewPlayer(sender, numPlayers);
-		if (numPlayers == 10){
+		if (numPlayers == maxPlayers){
+			bank += bet*numPlayers - lot;
 			address winner = dro();
 			pendingWithdrawals[winner] += lot;
 			bytes12 message = "drolotWinner";
 			Winner(winner, message);
-			clear();
+			clearPlayers();
 			if (nextBet != 0){
 				bet = nextBet;
 				lot = nextLot;
+				maxPlayers = nextMaxPlayers;
 				nextBet = 0;
 			}
 		}
 	}
 
-	function insert(address player) internal {
+	function insertPlayer(address player) internal {
 		players[numPlayers++] = player;
 	}
 
-	function clear() internal {
+	function clearPlayers() internal {
 		numPlayers = 0;
 	}
 
