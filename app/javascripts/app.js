@@ -40,6 +40,14 @@ window.App = {
 		self.addWinner(result.args._winner);
 	});
 
+	/* Display web3 or non-web3 interface */
+	
+	if (window.web3enabled){
+	  $(".noweb3").hide();	
+	}
+	else{
+	  $(".web3").hide();	
+	}
 	
 	/* Event listener for input */
 
@@ -56,22 +64,24 @@ window.App = {
 	/* */
 
 	$("#contract-address").append(instance.contract.address);
-	$("#contract-owner").append(instance.contract.owner.call());
+//	$("#contract-owner").append(instance.contract.owner.call());
+	instance.contract.bet.call(function(error, result){$("#send-ether").append(web3.fromWei(result.valueOf()), "ether");})
 
-
-        self.refreshBankBalance(web3.eth.getBalance(instance.contract.address));
+	web3.eth.getBalance(instance.contract.address, function(error, result){self.refreshBankBalance(result)});
+//        self.refreshBankBalance(web3.eth.getBalance(instance.contract.address));
 
         /* Players in current game */
-	var nplayers = instance.contract.numPlayers.call().valueOf();
-	for(var i=0; i < nplayers; i++){
-		self.addPlayer(instance.contract.players.call(i));
-	}
+	instance.contract.numPlayers.call(function(error, nplayers){
+		for(var i=0; i < nplayers; i++){
+			instance.contract.players.call( function(error, player){self.addPlayer(player);}  );
+		}
+	});
 
         /* All the winners */
-       var filter = web3.eth.filter({fromBlock: instance.contract.birthBlock.call(), toBlock: 'latest', address: instance.contract.address, topics: [null, null, "0x64726f6c6f7457696e6e65720000000000000000000000000000000000000000"]});
-        filter.watch(function(error, result){
-		self.addAllWinner((result.topics[1]));
-		                           });
+	instance.contract.birthBlock.call( function(error, birthBlock){
+       						var filter = web3.eth.filter({fromBlock: birthBlock , toBlock: 'latest', address: instance.contract.address, topics: [null, null, "0x64726f6c6f7457696e6e65720000000000000000000000000000000000000000"]});
+        					filter.watch(function(error, result){ self.addAllWinner((result.topics[1])); });
+	});
     });
 
   },
@@ -111,13 +121,13 @@ window.App = {
 window.addEventListener('load', function() {
 	// Checking if Web3 has been injected by the browser (Mist/MetaMask)
 	if (typeof web3 !== 'undefined') {
-		console.warn("Using web3 detected from external source. If you find that your accounts don't appear or you have 0 MetaCoin, ensure you've configured that source properly. If using MetaMask, see the following link. Feel free to delete this warning. :) http://truffleframework.com/tutorials/truffle-and-metamask")
 		// Use Mist/MetaMask's provider
 		window.web3 = new Web3(web3.currentProvider);
+		window.web3enabled = true;
 	} else {
-		console.warn("No web3 detected. Falling back to http://localhost:8545. You should remove this fallback when you deploy live, as it's inherently insecure. Consider switching to Metamask for development. More info here: http://truffleframework.com/tutorials/truffle-and-metamask");
 		// fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
 		window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+		window.web3enabled = false;
 	}
 	App.start();
 });

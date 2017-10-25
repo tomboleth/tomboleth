@@ -6,23 +6,38 @@
 		<script type="text/javascript" src="app.js"></script>
 	</head>
 	<body>
-		<div class="uk-inline uk-align-center">
-			<div class="uk-overflow-hidden">
-				<img class="uk-animation-reverse uk-transform-origin-top-right" uk-scrollspy="cls: uk-animation-kenburns; repeat: true" src="images/head.jpg" alt=""></div>
-			<div class="uk-overlay uk-overlay-default uk-position-bottom"><h1 class="uk-text-center">Play Tomboleth and win Ether !</h1></div>
-		</div>
-		<div>Send 0.1 ether to <strong id="contract-address"></strong></div>		
-		<div id="contract-owner"></div>		
-		<div id="contract-balance"></div>		
-		<div id="player-balance-div">
-			<label>Check balance <input type="text" id="player-balance-address"></label>
-			<div id="player-balance"></div>
+		<div uk-grid class="uk-background-primary">
+			<div class="uk-inline uk-align-center">
+				<div class="uk-overflow-hidden">
+					<img class="uk-animation-reverse uk-transform-origin-top-right" uk-scrollspy="cls: uk-animation-kenburns; repeat: true" src="images/head.jpg" alt=""></div>
+				<div class="uk-overlay-primary uk-position-cover"></div>
+				<div class="uk-overlay uk-position-bottom"><h1 class="uk-text-center uk-heading-primary">Play Tomboleth and win Ether !</h1></div>
+			</div>
 		</div>		
+		
+		<div uk-grid>
+		<div class="noweb3">
+			<div class="uk-alert-warning" uk-alert>
+				    <a class="uk-alert-close" uk-close></a>
+				        <p>You don't use a ethereum enabled browser, you will need to use MyEtherWallet to play. See how.</p>
+			</div>
+			<div><span class="uk-text-primary uk-text-lead">Send <strong id="send-ether"></strong> to <strong id="contract-address"></strong></span></div>		
+			<!--<div id="contract-owner"></div>-->
+			<div id="contract-balance"></div>		
+			<div id="player-balance-div">
+				<label>Check balance <input type="text" id="player-balance-address"></label>
+				<div id="player-balance"></div>
+			</div>		
+		</div>
+
+		<div class="web3"><button class="uk-button uk-button-primary">Play</button>
+		</div>
 
 		<div id="players"></div>
 		<div id="winner"></div>
 
 		<div id="all-winners"></div>
+		</div>
 	</body>
 </html>
 
