@@ -6,3 +6,6 @@ to = Drolot.address;from = web3.eth.accounts[0];amount = web3.toWei(0.1, "ether"
 Drolot.deployed().then((instance) => {app=instance})
 web3.eth.sendTransaction({from:from, to:to, value: amount});
  
+
+Graphics : 
+Oksana Latysheva from the Noun Project
