@@ -7,16 +7,18 @@ import { default as contract } from 'truffle-contract'
 import { default as UIkit} from 'uikit'
 import { default as Icons} from 'uikit/dist/js/uikit-icons'
 import { default as $} from 'jquery'
+import css from "../index.css";
 //import jpg from './app/images/head.jpg'
 
 // Import our contract artifacts and turn them into usable abstractions.
 import json from '../../build/contracts/Drolot.json'
 var Drolot = contract(json);
 
+UIkit.use(Icons);
+
 window.App = {
   start: function() {
     var self = this;
-    //var web3 = new Web3.providers.HttpProvider("http://localhost:8545")
     Drolot.setProvider(web3.currentProvider);
 
     Drolot.deployed().then(function(instance) {
@@ -64,11 +66,9 @@ window.App = {
 	/* */
 
 	$("#contract-address").append(instance.contract.address);
-//	$("#contract-owner").append(instance.contract.owner.call());
 	instance.contract.bet.call(function(error, result){$("#send-ether").append(web3.fromWei(result.valueOf()), "ether");})
 
-	web3.eth.getBalance(instance.contract.address, function(error, result){self.refreshBankBalance(result)});
-//        self.refreshBankBalance(web3.eth.getBalance(instance.contract.address));
+//	web3.eth.getBalance(instance.contract.address, function(error, result){self.refreshBankBalance(result)});
 
         /* Players in current game */
 	instance.contract.numPlayers.call(function(error, nplayers){
