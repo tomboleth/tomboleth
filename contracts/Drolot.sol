@@ -38,6 +38,7 @@ contract Drolot is Owned, Withdrawable {
 	uint public maxPlayers = 10 ;
 	uint public bet = 100 finney;
 	uint public lot = 990 finney;
+	uint fees = 10 finney;
 	uint nextBet = 0;
 	uint nextLot = 0;
 	uint nextMaxPlayers = 0;
@@ -67,13 +68,14 @@ contract Drolot is Owned, Withdrawable {
 		nextBet = newBet;
 		nextLot = newLot;
 		nextMaxPlayers = newMaxPlayers;
+		fees = (newBet * newMaxPlayers) - nextLot;
 	}
 
 	function play(address sender) internal{
 		insertPlayer(sender);
 		NewPlayer(sender, numPlayers);
 		if (numPlayers == maxPlayers){
-			bank += bet*numPlayers - lot;
+			bank += fees;
 			address winner = dro();
 			pendingWithdrawals[winner] += lot;
 			bytes12 message = "drolotWinner";

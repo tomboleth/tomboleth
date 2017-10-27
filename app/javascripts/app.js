@@ -105,11 +105,11 @@ window.App = {
     },
 
     addPlayer: function(player) {
-	$("#players").append(`<div>${player}</div>`);
+	$("#players").append(`<li class="uk-animation-slide-right"><span uk-icon="icon: user; ratio:0.7">&nbsp;</span>${player}</li>`);
     },
 
     addWinner: function(winner) {
-	$("#winner").append(`<div>Winner is ${winner}</div>`);
+	$("#winner").append(`<h3 class="uk-text-center uk-text-primary uk-text-lead">Winner</h3><div class="uk-text-primary uk-text-lead" align="center"><span uk-icon="icon: star; ratio:2">&nbsp;</span>${winner}`);
     },
 
     addAllWinner: function(winner) {

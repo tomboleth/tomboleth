@@ -1,53 +1,177 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
-		<link rel="stylesheet" href="node_modules/uikit/dist/css/uikit.min.css">
-		<script type="text/javascript" src="app.js"></script>
-	</head>
-	<body>
-
-		<div class="uk-panel uk-background-primary uk-animation-slide-top-small">
-			<h1 class="uk-overlay uk-position-center uk-heading-hero"> Play Tomboleth.<br/>Win Ether</h1>
-			<img class="uk-align-right" src="images/two-tickets.png" alt="">
-			<a href="#info" class="white uk-overlay uk-position-top"  uk-icon="icon: info; ratio: 2" uk-toggle></a>
-			<div id="info" uk-modal>
-				<div class="uk-modal-dialog">
-					<button class="uk-modal-close-default close" type="button" uk-close></button>
-					<div class="uk-modal-body">
-						<p>Tomboleth is an smart contracts game. We are on <a href="https://github.com/tomboleth">github</a></p>
-						<p>Graphics by Oksana Latysheva from the Noun Project</p>
-					</div>
-				</div>
-			</div>
-			<span class="rules uk-overlay uk-position-bottom"> Bet: 0.1 ETH<br/>Win: 0.99 ETH</span>
-		</div>			
-		
-		<div container>
-			<div class="noweb3 uk-alert-warning" uk-alert>
-				    <a class="uk-alert-close" uk-close></a>
-				        <p align="center">You don't use a ethereum enabled browser, you will need to use MyEtherWallet to play. See how.</p>
-			</div>
-			<div class="uk-flex uk-flex-around">
-			  <div>
-			    <div><span class="uk-text-primary uk-text-lead">To play, simply send <strong id="send-ether"></strong> to <strong id="contract-address"></strong></span></div>		
-			<!--<div id="contract-owner"></div>-->
-			<!--<div id="contract-balance"></div>-->
-				<div class="uk-margin"><div>Check your Tomboleth balance:</div><input class="uk-input uk-form-width-medium" placeholder="Your ETH address" type="text" id="player-balance-address"></div>
-				<div id="player-balance"></div>
-		          </div>  
-
-			  <!-- right column -->
-			  <div>
-				  <div id="players" align="center"><div><span uk-icon="icon: user; ratio:0.7"></span> 0x408324839483984938</div></div>
-				  <div class="uk-margin"><div id="winner" class="uk-text-primary uk-text-lead" align="center"><span uk-icon="icon: star; ratio:2"></span> 0x408324839483984938</div></div>
-			  </div>
-			</div>	
-
-			<!-- Put on a off screen ? -->	
-			<div id="all-winners"></div>
-		</div>
-	</body>
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for HTML5 for Linux version 5.2.0">
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href=
+  "https://fonts.googleapis.com/css?family=Montserrat:400,700">
+  <link rel="stylesheet" href=
+  "node_modules/uikit/dist/css/uikit.min.css">
+  <script type="text/javascript" src="app.js">
+  </script>
+  <title></title>
+</head>
+<body>
+  <div class="uk-offcanvas-content">
+    <div class=
+    "uk-panel uk-background-primary uk-animation-slide-top-small uk-inline uk-width-1-1">
+      <h1 class="uk-overlay uk-position-center uk-heading-hero">
+      Play Tomboleth.<br>
+      Win Ether</h1><img class="uk-align-right" src=
+      "images/two-tickets.png" alt="">
+      <div class="uk-overlay uk-position-top">
+        <a href="#info" class="white uk-float-right" uk-icon=
+        "icon: info; ratio: 2" uk-toggle=""></a>
+        <div id="info" uk-modal="">
+          <div class="uk-modal-dialog">
+            <div class="uk-modal-body">
+              <button class="uk-modal-close-default" type="button"
+              uk-close="">&nbsp;</button>
+              <p>Tomboleth is an Ethereum smart contracts game. It
+              is developped with <a href=
+              "http://truffleframework.com">Truffle Framework</a>,
+              <a href="https://webpack.js.org">Webpack</a> and
+              <a href="https://getuikit.com/">UIkit</a>.</p>
+              <p>Code is on <a href=
+              "https://github.com/tomboleth">GitHub</a></p>
+              <p>Graphics by Oksana Latysheva from the <a href=
+              "https://thenounproject.com/">Noun Project</a></p>
+            </div>
+          </div>
+        </div><a href="#faq" class="white uk-float-left" uk-icon=
+        "icon: question; ratio: 2" uk-toggle=""></a>
+        <div id="faq" class="uk-width-large" uk-offcanvas="">
+          <div class="uk-offcanvas-bar uk-width-large">
+            <button class="uk-offcanvas-close" type="button"
+            uk-close="">&nbsp;</button>
+            <h3>FAQ</h3>
+            <ul uk-accordion="multiple: true">
+              <li>
+                <h3 class="uk-accordion-title">What's the rule
+                ?</h3>
+                <div class="uk-accordion-content">
+                  <p>Pretty simple :&nbsp;10 players bet 0.1ETH,
+                  one win 0.99ETH.</p>
+                </div>
+              </li>
+              <li>
+                <h3 class="uk-accordion-title">What's my Tomboleth
+                balance ?</h3>
+                <div class="uk-accordion-content">
+                  <p>Smart contracts <a href=
+                  "https://solidity.readthedocs.io/en/develop/common-patterns.html">
+                  recommended method</a> of sending funds after an
+                  effect is using the withdrawal pattern. That's
+                  why your balance stays on the contract until you
+                  withdraw.</p>
+                </div>
+              </li>
+              <li>
+                <h3 class="uk-accordion-title">Can I play with my
+                balance ?</h3>
+                <div class="uk-accordion-content">
+                  <p>Yes. You don't need to send ETH again if you
+                  have a positive balance.</p>
+                </div>
+              </li>
+              <li>
+                <h3 class="uk-accordion-title">Can I play w/o a
+                Web3 browser ?</h3>
+                <div class="uk-accordion-content">
+                  <p>Yep. See here.</p>
+                </div>
+              </li>
+              <li>
+                <h3 class="uk-accordion-title">When&nbsp;ICO ?</h3>
+                <div class="uk-accordion-content">
+                  <p>There will never be an ICO. We take small fees
+                  for initial dev costs and future infrastructure
+                  costs coverage, and it should decrease as players
+                  volume increases…</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="uk-overlay uk-position-bottom">
+        <span class="rules">Max players: 10<br>
+        Bet: 0.1 ETH<br>
+        Win: 0.99 ETH</span>
+      </div>
+    </div>
+    <div container="">
+      <div class="noweb3 uk-alert-warning" uk-alert="">
+        <a class="uk-alert-close" uk-close=""></a>
+        <p class="uk-text-center">You don't use a ethereum enabled
+        browser, you will need to use MyEtherWallet to play. See
+        how.</p>
+      </div><!-- left column -->
+      <div class="uk-flex uk-flex-around">
+        <div class="noweb3">
+          <div>
+            <span class="uk-text-primary uk-text-lead">To play,
+            simply send <strong id="send-ether"></strong> to
+            <strong id="contract-address"></strong></span>
+          </div>
+          <div class="uk-margin">
+            Check your Tomboleth balance: <input class=
+            "uk-input uk-form-width-medium" placeholder=
+            "Your ETH address" type="text" id=
+            "player-balance-address">
+          </div>
+          <div id="player-balance"></div>
+        </div>
+        <div class="web3">
+          <div>
+            Your Tomboleth Balance is
+          </div>
+          <div class="uk-margin">
+            <button class=
+            "uk-button uk-button-default">Play</button>
+            <button class="uk-button uk-button-default" disabled
+            >Play with balance</button>
+          </div>
+        </div><!-- right column -->
+        <div>
+          <h3 class="uk-text-center">Ongoing game players :</h3>
+          <ul id="players" class="uk-list uk-list-striped" align=
+          "center">
+           <!-- <li class="uk-animation-slide-right"><span uk-icon=
+            "icon: user; ratio:0.7">&nbsp;</span>
+            0x408324839483984938</li>-->
+          </ul>
+          <div class="uk-margin">
+            <div id="winner" class="uk-animation-shake">
+             <!-- <h3 class=
+              "uk-text-center uk-text-primary uk-text-lead">
+              Winner</h3>
+              <div class="uk-text-primary uk-text-lead"
+              align="center">
+                <span uk-icon="icon: star; ratio:2">&nbsp;</span>
+                0x408324839483984938-->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="uk-align-center" container="">
+        <a class=
+        "uk-button uk-button-secondary uk-align-center uk-width-small"
+        href="#modal-overflow" uk-toggle="">List of winners</a>
+        <div id="modal-overflow" uk-modal="">
+          <div class="uk-modal-dialog">
+            <div class="uk-modal-header">
+              <h2 class="uk-modal-title">Winners</h2>
+            </div>
+            <div class="uk-modal-body" uk-overflow-auto="">
+              <div id="all-winners">0x9487234872342</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- Main -->
+  </div>
+</body>
 </html>
-
