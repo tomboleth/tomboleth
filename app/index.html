@@ -51,8 +51,8 @@
                 <h3 class="uk-accordion-title">What's the rule
                 ?</h3>
                 <div class="uk-accordion-content">
-                  <p>Pretty simple :&nbsp;10 players bet 0.1ETH,
-                  one win 0.99ETH.</p>
+									<p>Pretty simple :&nbsp;<span class="maxplayers"></span> players bet <span class="bet"></span>,
+									one win <span class="win"></span>.</p>
                 </div>
               </li>
               <li>
@@ -96,9 +96,9 @@
         </div>
       </div>
       <div class="uk-overlay uk-position-bottom">
-        <span class="rules">Max players: 10<br>
-        Bet: 0.1 ETH<br>
-        Win: 0.99 ETH</span>
+				<span class="rules">Max players: <strong class="maxplayers"></strong><br>
+					Bet: <strong class="bet"></strong><br>
+					Win:  <strong class="win"></strong></span>
       </div>
     </div>
     <div container="">
@@ -107,15 +107,15 @@
         <p class="uk-text-center">You don't use a ethereum enabled
         browser, you will need to use MyEtherWallet to play. See
         how.</p>
-      </div><!-- left column -->
-      <div class="uk-flex uk-flex-around">
-        <div class="noweb3">
-          <div>
-            <span class="uk-text-primary uk-text-lead">To play,
-            simply send <strong id="send-ether"></strong> to
-            <strong id="contract-address"></strong></span>
-          </div>
-          <div class="uk-margin">
+       </div>
+       <div class="noweb3 uk-text-center">
+         <span class="uk-text-primary uk-text-lead">To play,
+           simply send <strong class="bet"></strong> to
+           <strong id="contract-address"></strong></span>
+       </div>
+       <div class="uk-flex uk-flex-around uk-margin">
+         <div class="noweb3">
+         <div class="uk-margin">
             Check your Tomboleth balance: <input class=
             "uk-input uk-form-width-medium" placeholder=
             "Your ETH address" type="text" id=
@@ -135,7 +135,7 @@
           </div>
         </div><!-- right column -->
         <div>
-          <h3 class="uk-text-center">Ongoing game players :</h3>
+					<h3 class="uk-text-center">Ongoing game : <span class="numplayers"></span>/<span class="maxplayers"></span> players</h3>
           <ul id="players" class="uk-list uk-list-striped" align=
           "center">
            <!-- <li class="uk-animation-slide-right"><span uk-icon=
@@ -166,7 +166,7 @@
               <h2 class="uk-modal-title">Winners</h2>
             </div>
             <div class="uk-modal-body" uk-overflow-auto="">
-              <div id="all-winners">0x9487234872342</div>
+              <div id="all-winners"></div>
             </div>
           </div>
         </div>
