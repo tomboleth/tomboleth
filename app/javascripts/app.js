@@ -32,7 +32,7 @@ window.App = {
                     self.clearGame();
                 }
                 self.addPlayer(result.args._from, result.args._nplayers);
-                //  self.refreshBankBalance(web3.eth.getBalance(instance.contract.address));
+                self.clearWinner();
             });
 
             var winner_event = instance.Winner();
@@ -67,15 +67,12 @@ window.App = {
             var contract = instance.contract.address;
             var etherscan = "https://etherscan.io/address/";
             var escontract = etherscan.concat(contract, "#code");
-            console.log(escontract);
             $("#contract-address").append(contract);
             $("#a-contract-address").attr("href", escontract);
             instance.contract.bet.call(function(error, result){$(".bet").append(web3.fromWei(result.valueOf(), "ether"), " &Xi;");});
             instance.contract.lot.call(function(error, result){$(".win").append(web3.fromWei(result.valueOf(), "ether"), " &Xi;");});
             instance.contract.maxPlayers.call(function(error, result){$(".maxplayers").append(result.valueOf());});
             instance.contract.numPlayers.call(function(error, result){$(".numplayers").append(result.valueOf());});
-
-            //  web3.eth.getBalance(instance.contract.address, function(error, result){self.refreshBankBalance(result)});
 
             /* Players in current game */
             instance.contract.numPlayers.call(function(error, nplayers){
@@ -87,7 +84,8 @@ window.App = {
             /* All the winners */
             instance.contract.birthBlock.call( function(error, birthBlock){
                 var filter = web3.eth.filter({fromBlock: birthBlock , toBlock: 'latest', address: instance.contract.address, topics: [null, null, "0x64726f6c6f7457696e6e65720000000000000000000000000000000000000000"]});
-                filter.watch(function(error, result){ self.addAllWinner((result.topics[1])); });
+                var re = /(0x0*)/;
+                filter.watch(function(error, result){ self.addAllWinner(result.blockNumber, result.topics[1].replace(re, "")); });
             });
         });
 
@@ -104,6 +102,10 @@ window.App = {
     refreshBankBalance: function(balance) {
         $("#contract-balance").children().remove();
         $("#contract-balance").append(`<div>${balance} &Xi;</div>`);
+    },
+
+    clearWinner: function(player) {
+        $("#winner").empty();
     },
 
     clearGame: function(player) {
@@ -123,8 +125,8 @@ window.App = {
         $("#winner").append(`<div class="uk-animation-shake"><h3 class="uk-text-center uk-text-primary uk-text-lead">Winner</h3><div class="uk-text-primary uk-text-lead" align="center"><span uk-icon="icon: star; ratio:2">&nbsp;</span>${winner}</div></div>`);
     },
 
-    addAllWinner: function(winner) {
-        $("#all-winners").append(`<div>${winner}</div>`);
+    addAllWinner: function(block, winner) {
+        $("#all-winners").append(`<tr><td>${block}</td><td>0x${winner}</td></tr>`);
     }
 };
 

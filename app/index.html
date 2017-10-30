@@ -148,19 +148,9 @@
 					<h3 class="uk-text-center">Ongoing game : <span class="numplayers"></span>/<span class="maxplayers"></span> players</h3>
           <ul id="players" class="uk-list uk-list-striped" align=
           "center">
-            <!-- <li class="uk-animation-slide-right"><span uk-icon=
-            "icon: user; ratio:0.7">&nbsp;</span>
-            0x408324839483984938</li>-->
           </ul>
           <div class="uk-margin">
             <div id="winner" class="uk-animation-shake">
-              <!-- <h3 class=
-              "uk-text-center uk-text-primary uk-text-lead">
-              Winner</h3>
-              <div class="uk-text-primary uk-text-lead"
-              align="center">
-                <span uk-icon="icon: star; ratio:2">&nbsp;</span>
-                0x408324839483984938-->
             </div>
           </div>
         </div>
@@ -169,13 +159,14 @@
         <a class=
         "uk-button uk-button-secondary uk-align-center uk-width-small"
         href="#modal-overflow" uk-toggle="">List of winners</a>
-        <div id="modal-overflow" uk-modal="">
-          <div class="uk-modal-dialog">
+        <div id="modal-overflow" class="uk-modal-container" uk-modal="">
+          <div class="uk-modal-dialog uk-align-center">
+            <button class="uk-modal-close-default" type="button" uk-close></button>
             <div class="uk-modal-header">
-              <h2 class="uk-modal-title">Winners</h2>
+              <h2 class="uk-modal-title uk-text-center">Winners</h2>
             </div>
             <div class="uk-modal-body" uk-overflow-auto="">
-              <div id="all-winners"></div>
+							<table class="uk-table uk-table-small"><thead><tr><th>#Block</th><th>Address</th></tr></thead><tbody id="all-winners"></tbody></table>
             </div>
           </div>
         </div>
