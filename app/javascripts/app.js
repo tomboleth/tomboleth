@@ -44,10 +44,10 @@ window.App = {
             /* Display web3 or non-web3 interface */
 
             if (window.web3enabled){
-                $(".noweb3").hide();  
+                $(".noweb3").hide();
             }
             else{
-                $(".web3").hide();    
+                $(".web3").hide();
             }
 
             /* Event listener for input */
@@ -96,7 +96,7 @@ window.App = {
     },
 
     refreshPlayerBalance: function(address) {
-        $("#player-balance").append(`<div>${address}  &Xi;</div>`);
+        $("#player-balance").append(`<div>You balance is ${address}  &Xi;</div>`);
     },
 
     refreshBankBalance: function(balance) {
