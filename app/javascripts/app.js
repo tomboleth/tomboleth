@@ -17,84 +17,88 @@ var Drolot = contract(json);
 UIkit.use(Icons);
 
 window.App = {
-  start: function() {
-    var self = this;
-    Drolot.setProvider(web3.currentProvider);
+    start: function() {
+        var self = this;
+        Drolot.setProvider(web3.currentProvider);
 
-    Drolot.deployed().then(function(instance) {
-    console.log(instance.contract);
+        Drolot.deployed().then(function(instance) {
+            console.log(instance.contract);
 
-        /* Events listener from contract */
+            /* Events listener from contract */
 
-    var new_player_event = instance.NewPlayer();
-    new_player_event.watch(function(error, result){
-        if (result.args._nplayers == 1){
-            self.clearGame();
-        }
-        self.addPlayer(result.args._from, result.args._nplayers);
-      //  self.refreshBankBalance(web3.eth.getBalance(instance.contract.address));
-    });
-
-    var winner_event = instance.Winner();
-
-    winner_event.watch(function(error, result){
-        console.log(result);
-        self.addWinner(result.args._winner);
-    });
-
-    /* Display web3 or non-web3 interface */
-    
-    if (window.web3enabled){
-      $(".noweb3").hide();  
-    }
-    else{
-      $(".web3").hide();    
-    }
-    
-    /* Event listener for input */
-
-        $('#player-balance-address').each(function() {
-            var elem = $(this);
-            elem.bind("propertychange change click keyup input paste", function(event){
-                self.cleanPlayerBalance();
-                if (web3.isAddress(elem.val().trim())){
-                   self.refreshPlayerBalance(web3.fromWei(instance.contract.pendingWithdrawals.call(elem.val().trim()), "ether"));
+            var new_player_event = instance.NewPlayer();
+            new_player_event.watch(function(error, result){
+                if (result.args._nplayers == 1){
+                    self.clearGame();
                 }
+                self.addPlayer(result.args._from, result.args._nplayers);
+                //  self.refreshBankBalance(web3.eth.getBalance(instance.contract.address));
+            });
+
+            var winner_event = instance.Winner();
+
+            winner_event.watch(function(error, result){
+                self.addWinner(result.args._winner);
+            });
+
+            /* Display web3 or non-web3 interface */
+
+            if (window.web3enabled){
+                $(".noweb3").hide();  
+            }
+            else{
+                $(".web3").hide();    
+            }
+
+            /* Event listener for input */
+
+            $('#player-balance-address').each(function() {
+                var elem = $(this);
+                elem.bind("propertychange change click keyup input paste", function(event){
+                    self.cleanPlayerBalance();
+                    if (web3.isAddress(elem.val().trim())){
+                        self.refreshPlayerBalance(web3.fromWei(instance.contract.pendingWithdrawals.call(elem.val().trim()), "ether"));
+                    }
+                });
+            });
+
+            /* */
+
+            var contract = instance.contract.address;
+            var etherscan = "https://etherscan.io/address/";
+            var escontract = etherscan.concat(contract, "#code");
+            console.log(escontract);
+            $("#contract-address").append(contract);
+            $("#a-contract-address").attr("href", escontract);
+            instance.contract.bet.call(function(error, result){$(".bet").append(web3.fromWei(result.valueOf(), "ether"), " &Xi;");});
+            instance.contract.lot.call(function(error, result){$(".win").append(web3.fromWei(result.valueOf(), "ether"), " &Xi;");});
+            instance.contract.maxPlayers.call(function(error, result){$(".maxplayers").append(result.valueOf());});
+            instance.contract.numPlayers.call(function(error, result){$(".numplayers").append(result.valueOf());});
+
+            //  web3.eth.getBalance(instance.contract.address, function(error, result){self.refreshBankBalance(result)});
+
+            /* Players in current game */
+            instance.contract.numPlayers.call(function(error, nplayers){
+                for(var i=0; i < nplayers; i++){
+                    instance.contract.players.call( function(error, player){self.addPlayer(player);}  );
+                }
+            });
+
+            /* All the winners */
+            instance.contract.birthBlock.call( function(error, birthBlock){
+                var filter = web3.eth.filter({fromBlock: birthBlock , toBlock: 'latest', address: instance.contract.address, topics: [null, null, "0x64726f6c6f7457696e6e65720000000000000000000000000000000000000000"]});
+                filter.watch(function(error, result){ self.addAllWinner((result.topics[1])); });
             });
         });
 
-    /* */
-
-    $("#contract-address").append(instance.contract.address);
-    instance.contract.bet.call(function(error, result){$(".bet").append(web3.fromWei(result.valueOf(), "ether"), " &Xi;");});
-    instance.contract.lot.call(function(error, result){$(".win").append(web3.fromWei(result.valueOf(), "ether"), " &Xi;");});
-    instance.contract.maxPlayers.call(function(error, result){$(".maxplayers").append(result.valueOf());});
-    instance.contract.numPlayers.call(function(error, result){$(".numplayers").append(result.valueOf());});
-
-//  web3.eth.getBalance(instance.contract.address, function(error, result){self.refreshBankBalance(result)});
-
-        /* Players in current game */
-    instance.contract.numPlayers.call(function(error, nplayers){
-        for(var i=0; i < nplayers; i++){
-            instance.contract.players.call( function(error, player){self.addPlayer(player);}  );
-        }
-    });
-
-        /* All the winners */
-    instance.contract.birthBlock.call( function(error, birthBlock){
-                            var filter = web3.eth.filter({fromBlock: birthBlock , toBlock: 'latest', address: instance.contract.address, topics: [null, null, "0x64726f6c6f7457696e6e65720000000000000000000000000000000000000000"]});
-                            filter.watch(function(error, result){ self.addAllWinner((result.topics[1])); });
-    });
-    });
-
-  }, 
+    },
 
     cleanPlayerBalance: function() {
         $("#player-balance").children().remove();
     },
 
     refreshPlayerBalance: function(address) {
-    $("#player-balance").append(`<div>${address}  &Xi;</div>`);
+        $("#player-balance").append(`<div>${address}  &Xi;</div>`);
     },
 
     refreshBankBalance: function(balance) {

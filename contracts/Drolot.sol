@@ -70,7 +70,7 @@ contract Drolot is Owned, Withdrawable, Pausable {
 
     event Winner(
         address indexed _winner,
-                bytes12 indexed message
+        bytes12 indexed message
     );
 
     function () payable ifActive {
