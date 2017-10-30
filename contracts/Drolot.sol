@@ -33,15 +33,15 @@ contract Withdrawable is Owned {
 
 contract Pausable is Owned {
     bool public active = true;
-    bool public will_pause = false;
+    bool public willPauseBool = false;
 
     modifier ifActive {
         require(active);
         _;
     }
 
-    function will_pause() onlyOwner {
-        will_pause = true;
+    function willPause() onlyOwner {
+        willPauseBool = true;
     }
 
     function pause() onlyOwner {
@@ -50,11 +50,12 @@ contract Pausable is Owned {
 
     function start() onlyOwner {
         active = true;
-        will_pause = false;
+        willPauseBool = false;
     }
 }
 
 contract Drolot is Owned, Withdrawable, Pausable {
+    uint public partyPlayed = 0;
     address[10] public players;
     uint public numPlayers = 0;
     uint public maxPlayers = 10 ;
@@ -95,6 +96,9 @@ contract Drolot is Owned, Withdrawable, Pausable {
         insertPlayer(sender);
         NewPlayer(sender, numPlayers);
         if (numPlayers == 1){
+            partyPlayed++;
+        }
+        else if (numPlayers == 2){
             bank += fees;
         }
         else if (numPlayers == maxPlayers){
@@ -102,7 +106,7 @@ contract Drolot is Owned, Withdrawable, Pausable {
             pendingWithdrawals[winner] += lot;
             Winner(winner, idx_message);
             clearPlayers();
-            if (will_pause){
+            if (willPauseBool){
                 active = false;
             }
         }
