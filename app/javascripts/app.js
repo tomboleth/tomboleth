@@ -19,10 +19,12 @@ UIkit.use(Icons);
 window.App = {
     start: function() {
         var self = this;
+
         Drolot.setProvider(web3.currentProvider);
 
         Drolot.deployed().then(function(instance) {
-            console.log(instance.contract);
+            console.log(instance);
+            var contract = instance.contract.address;
 
             /* Events listener from contract */
 
@@ -31,6 +33,7 @@ window.App = {
                 if (result.args._nplayers == 1){
                     self.clearGame();
                 }
+                console.log(result.args);
                 self.addPlayer(result.args._from, result.args._nplayers);
                 self.clearWinner();
             });
@@ -44,13 +47,34 @@ window.App = {
             /* Display web3 or non-web3 interface */
 
             if (window.web3enabled){
+                web3.eth.defaultAccount = web3.eth.accounts[0];
                 $(".noweb3").hide();
+                instance.contract.bet.call(function(error, bet){
+                instance.contract.pendingWithdrawals.call(web3.eth.accounts[0], function(e,r){
+                    self.refreshWeb3PlayerBalance(web3.fromWei(r.valueOf()));
+                    if (r.valueOf() > bet) {self.enableWeb3PlayWithBalance();} });
+                });
+                $('#web3-play').each(function() {
+                    var elem = $(this);
+                    elem.bind("click", function(event){
+                        instance.contract.bet.call(function(error, result){
+                            web3.eth.sendTransaction({from:web3.eth.accounts[0],to: contract, value: result, gas: 100000}, function(e,r){console.log(r);});
+                        });
+                    });
+                });
+                $('#web3-play-with-balance').each(function() {
+                    var elem = $(this);
+                    elem.bind("click", function(event){
+                        instance.playWithWinnings.sendTransaction({from:web3.eth.accounts[0]});
+                    });
+
+                });
             }
             else{
                 $(".web3").hide();
             }
 
-            /* Event listener for input */
+            /* Event listener for player address input */
 
             $('#player-balance-address').each(function() {
                 var elem = $(this);
@@ -64,7 +88,6 @@ window.App = {
 
             /* */
 
-            var contract = instance.contract.address;
             var etherscan = "https://etherscan.io/address/";
             var escontract = etherscan.concat(contract, "#code");
             $("#contract-address").append(contract);
@@ -83,7 +106,10 @@ window.App = {
 
             /* All the winners */
             instance.contract.birthBlock.call( function(error, birthBlock){
-                var filter = web3.eth.filter({fromBlock: birthBlock , toBlock: 'latest', address: instance.contract.address, topics: [null, null, "0x64726f6c6f7457696e6e65720000000000000000000000000000000000000000"]});
+		var drolotMessage = "0x64726f6c6f7457696e6e65720000000000000000000000000000000000000000";
+                var filter = web3.eth.filter({fromBlock: birthBlock , toBlock: 'latest',
+						address: instance.contract.address,
+						topics: [null, null, drolotMessage]});
                 var re = /(0x0*)/;
                 filter.watch(function(error, result){ self.addAllWinner(result.blockNumber, result.topics[1].replace(re, "")); });
             });
@@ -95,8 +121,16 @@ window.App = {
         $("#player-balance").children().remove();
     },
 
-    refreshPlayerBalance: function(address) {
-        $("#player-balance").append(`<div>You balance is ${address}  &Xi;</div>`);
+    enableWeb3PlayWithBalance: function() {
+        $("#web3-play-with-balance").prop('disabled', false);
+    },
+
+    refreshWeb3PlayerBalance: function(balance) {
+        $(".web3-player-balance").append(`${balance} &Xi;`);
+    },
+
+    refreshPlayerBalance: function(balance) {
+        $("#player-balance").append(`<div>Your balance is ${balance}  &Xi;</div>`);
     },
 
     refreshBankBalance: function(balance) {

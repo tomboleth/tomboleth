@@ -7,5 +7,7 @@ Drolot.deployed().then((instance) => {app=instance})
 web3.eth.sendTransaction({from:from, to:to, value: amount});
  
 
+testrpc -b 5 -m "nothing engage amazing column cycle type humble glimpse switch tumble boring champion"
+
 Graphics : 
 Oksana Latysheva from the Noun Project
