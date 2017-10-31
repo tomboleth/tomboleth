@@ -36,12 +36,22 @@ window.App = {
                 console.log(result.args);
                 self.addPlayer(result.args._from, result.args._nplayers);
                 self.clearWinner();
+                instance.contract.bet.call(function(error, bet){
+                    instance.contract.pendingWithdrawals.call(web3.eth.accounts[0], function(e,r){
+                        self.refreshWeb3PlayerBalance(r.valueOf(), bet.valueOf());
+                    });
+                });
             });
 
             var winner_event = instance.Winner();
 
             winner_event.watch(function(error, result){
                 self.addWinner(result.args._winner);
+                instance.contract.bet.call(function(error, bet){
+                    instance.contract.pendingWithdrawals.call(web3.eth.accounts[0], function(e,r){
+                        self.refreshWeb3PlayerBalance(r.valueOf(), bet.valueOf());
+                    });
+                });
             });
 
             /* Display web3 or non-web3 interface */
@@ -50,9 +60,9 @@ window.App = {
                 web3.eth.defaultAccount = web3.eth.accounts[0];
                 $(".noweb3").hide();
                 instance.contract.bet.call(function(error, bet){
-                instance.contract.pendingWithdrawals.call(web3.eth.accounts[0], function(e,r){
-                    self.refreshWeb3PlayerBalance(web3.fromWei(r.valueOf()));
-                    if (r.valueOf() > bet) {self.enableWeb3PlayWithBalance();} });
+                    instance.contract.pendingWithdrawals.call(web3.eth.accounts[0], function(e,r){
+                        self.refreshWeb3PlayerBalance(r.valueOf(), bet.valueOf());
+                    });
                 });
                 $('#web3-play').each(function() {
                     var elem = $(this);
@@ -125,8 +135,14 @@ window.App = {
         $("#web3-play-with-balance").prop('disabled', false);
     },
 
-    refreshWeb3PlayerBalance: function(balance) {
-        $(".web3-player-balance").append(`${balance} &Xi;`);
+    refreshWeb3PlayerBalance: function(balance, bet) {
+        var b = web3.fromWei(balance, "ether");
+        $(".web3-player-balance").empty();
+        $(".web3-player-balance").append(`${b} &Xi;`);
+        if (balance > bet) {
+            $("#web3-play-with-balance").prop('disabled', false);
+        }
+        console.log(balance,bet);
     },
 
     refreshPlayerBalance: function(balance) {
