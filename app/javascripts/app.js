@@ -189,7 +189,8 @@ window.addEventListener('load', function() {
         window.web3enabled = true;
     } else {
         // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-        window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+        //window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+        window.web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/cHbRZrapth8QaiDXVxyK"));
         window.web3enabled = false;
     }
     App.start();
