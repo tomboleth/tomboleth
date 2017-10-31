@@ -35,6 +35,11 @@
               <a href="https://getuikit.com/">UIkit</a>.</p>
               <p>Code is on <a href=
               "https://github.com/tomboleth">GitHub</a></p>
+              <p>You can reach us by <a href=
+              "mailto:tomboleth@gmail.com">mail</a> and <a href=
+              "https://twitter.com/tomboleth">Twitter</a>. We have
+              an official <a href="https://t.me/tomboleth">Telegram
+              channel</a>.</p>
               <p>Graphics by Oksana Latysheva from the <a href=
               "https://thenounproject.com/">Noun Project</a></p>
             </div>
@@ -51,8 +56,8 @@
                 <h3 class="uk-accordion-title">What's the rule
                 ?</h3>
                 <div class="uk-accordion-content">
-									<p>Pretty simple :&nbsp;<span class="maxplayers"></span> players bet <span class="bet"></span>,
-									one win <span class="win"></span>.</p>
+                  <p>Pretty simple :&nbsp; players bet , one win
+                  .</p>
                 </div>
               </li>
               <li>
@@ -87,8 +92,8 @@
                 !</h3>
                 <div class="uk-accordion-content">
                   <p>You can see the contract on <a id=
-                  "a-contract-address" href="">Etherscan</a> and all our code
-                  is on <a href=
+                  "a-contract-address" href="">Etherscan</a> and
+                  all our code is on <a href=
                   "https://github.com/tomboleth">GitHub</a></p>
                 </div>
               </li>
@@ -106,9 +111,9 @@
         </div>
       </div>
       <div class="uk-overlay uk-position-bottom">
-				<span class="rules">Max players: <strong class="maxplayers"></strong><br>
-					Bet: <strong class="bet"></strong><br>
-					Win:  <strong class="win"></strong></span>
+        <span class="rules">Max players:<br>
+        Bet:<br>
+        Win: </span>
       </div>
     </div>
     <div container="">
@@ -117,15 +122,14 @@
         <p class="uk-text-center">You don't use a ethereum enabled
         browser, you will need to use MyEtherWallet to play. See
         how.</p>
-       </div>
-       <div class="noweb3 uk-text-center">
-         <span class="uk-text-primary uk-text-lead">To play,
-           simply send <strong class="bet"></strong> to
-           <strong id="contract-address"></strong></span>
-       </div>
-       <div class="uk-flex uk-flex-around uk-margin">
-         <div class="noweb3">
-         <div class="uk-margin">
+      </div>
+      <div class="noweb3 uk-text-center">
+        <span class="uk-text-primary uk-text-lead">To play, simply
+        send to <strong id="contract-address"></strong></span>
+      </div>
+      <div class="uk-flex uk-flex-around uk-margin">
+        <div class="noweb3">
+          <div class="uk-margin">
             Check your Tomboleth balance: <input class=
             "uk-input uk-form-width-medium" placeholder=
             "Your ETH address" type="text" id=
@@ -145,13 +149,11 @@
           </div>
         </div><!-- right column -->
         <div>
-					<h3 class="uk-text-center">Ongoing game : <span class="numplayers"></span>/<span class="maxplayers"></span> players</h3>
+          <h3 class="uk-text-center">Ongoing game : / players</h3>
           <ul id="players" class="uk-list uk-list-striped" align=
-          "center">
-          </ul>
+          "center"></ul>
           <div class="uk-margin">
-            <div id="winner" class="uk-animation-shake">
-            </div>
+            <div id="winner" class="uk-animation-shake"></div>
           </div>
         </div>
       </div>
@@ -159,14 +161,23 @@
         <a class=
         "uk-button uk-button-secondary uk-align-center uk-width-small"
         href="#modal-overflow" uk-toggle="">List of winners</a>
-        <div id="modal-overflow" class="uk-modal-container" uk-modal="">
+        <div id="modal-overflow" class="uk-modal-container"
+        uk-modal="">
           <div class="uk-modal-dialog uk-align-center">
-            <button class="uk-modal-close-default" type="button" uk-close></button>
             <div class="uk-modal-header">
-              <h2 class="uk-modal-title uk-text-center">Winners</h2>
+              <h2 class="uk-modal-title uk-text-center">
+              Winners</h2>
             </div>
             <div class="uk-modal-body" uk-overflow-auto="">
-							<table class="uk-table uk-table-small"><thead><tr><th>#Block</th><th>Address</th></tr></thead><tbody id="all-winners"></tbody></table>
+              <table class="uk-table uk-table-small">
+                <thead>
+                  <tr>
+                    <th>#Block</th>
+                    <th>Address</th>
+                  </tr>
+                </thead>
+                <tbody id="all-winners"></tbody>
+              </table>
             </div>
           </div>
         </div>
