@@ -7,6 +7,7 @@ import { default as contract } from 'truffle-contract'
 import { default as UIkit} from 'uikit'
 import { default as Icons} from 'uikit/dist/js/uikit-icons'
 import { default as $} from 'jquery'
+import uikitcss from "uikit/dist/css/uikit.min.css";
 import css from "../index.css";
 //import jpg from './app/images/head.jpg'
 
