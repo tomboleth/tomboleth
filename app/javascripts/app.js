@@ -111,7 +111,8 @@ window.App = {
             /* Players in current game */
             instance.contract.numPlayers.call(function(error, nplayers){
                 for(var i=0; i < nplayers; i++){
-                    instance.contract.players.call( function(error, player){self.addPlayer(player);}  );
+                    instance.contract.players.call(i, function(error, player){
+                        self.addPlayer(player);}  );
                 }
             });
 
