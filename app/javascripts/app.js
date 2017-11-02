@@ -31,28 +31,33 @@ window.App = {
 
             var new_player_event = instance.NewPlayer();
             new_player_event.watch(function(error, result){
-                if (result.args._nplayers == 1){
-                    self.clearGame();
-                }
-                console.log(result.args);
-                self.addPlayer(result.args._from, result.args._nplayers);
-                self.clearWinner();
-                instance.contract.bet.call(function(error, bet){
-                    instance.contract.pendingWithdrawals.call(web3.eth.accounts[0], function(e,r){
-                        self.refreshWeb3PlayerBalance(r.valueOf(), bet.valueOf());
+                if (typeof result != 'undefined'){
+
+                    if (result.args._nplayers == 1){
+                        self.clearGame();
+                    }
+                    console.log(result.args);
+                    self.addPlayer(result.args._from, result.args._nplayers);
+                    self.clearWinner();
+                    instance.contract.bet.call(function(error, bet){
+                        instance.contract.pendingWithdrawals.call(web3.eth.accounts[0], function(e,r){
+                            self.refreshWeb3PlayerBalance(r.valueOf(), bet.valueOf());
+                        });
                     });
-                });
+                }
             });
 
             var winner_event = instance.Winner();
 
             winner_event.watch(function(error, result){
-                self.addWinner(result.args._winner);
-                instance.contract.bet.call(function(error, bet){
-                    instance.contract.pendingWithdrawals.call(web3.eth.accounts[0], function(e,r){
-                        self.refreshWeb3PlayerBalance(r.valueOf(), bet.valueOf());
+                if (typeof result != 'undefined'){
+                    self.addWinner(result.args._winner);
+                    instance.contract.bet.call(function(error, bet){
+                        instance.contract.pendingWithdrawals.call(web3.eth.accounts[0], function(e,r){
+                            self.refreshWeb3PlayerBalance(r.valueOf(), bet.valueOf());
+                        });
                     });
-                });
+                }
             });
 
             /* Display web3 or non-web3 interface */
