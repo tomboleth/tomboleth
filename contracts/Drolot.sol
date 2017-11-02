@@ -121,8 +121,8 @@ contract Drolot is Owned, Withdrawable, Pausable {
     }
 
     function insertPlayer(address player) internal {
-        //players[numPlayers++] = player;
-        players.push(player);
+        players[numPlayers++] = player;
+        //players.push(player);
     }
 
     function clearPlayers() internal {
