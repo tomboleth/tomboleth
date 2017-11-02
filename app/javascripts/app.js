@@ -36,7 +36,6 @@ window.App = {
                     if (result.args._nplayers == 1){
                         self.clearGame();
                     }
-                    console.log(result.args);
                     self.addPlayer(result.args._from, result.args._nplayers);
                     self.clearWinner();
                     instance.contract.bet.call(function(error, bet){
@@ -74,7 +73,13 @@ window.App = {
                     var elem = $(this);
                     elem.bind("click", function(event){
                         instance.contract.bet.call(function(error, result){
-                            web3.eth.sendTransaction({from:web3.eth.accounts[0],to: contract, value: result, gas: 100000}, function(e,r){console.log(r);});
+				try{
+					web3.eth.sendTransaction({from:web3.eth.accounts[0],to: contract, value: result, gas: 100000},
+					    function(e,r){self.addInfo(r)});
+				}
+				catch (e){
+					self.addAlert("We had a problem, if you are using Metamask, is it unlocked ?");
+				}
                         });
                     });
                 });
@@ -134,6 +139,19 @@ window.App = {
 
     },
 
+    addInfo: function(text){
+	$("#alert").append(`<div class="uk-alert-succes" uk-alert="">
+          <a class="uk-alert-close" uk-close=""></a>
+          <p class="uk-text-center">Transaction pending, you can see it on <a href="https:/ropsten.etherscan.io/tx/${text}">
+          Etherscan</a></p></div>`);
+    },
+
+    addAlert: function(text){
+	$("#alert").append(`<div class="uk-alert-danger" uk-alert="">
+          <a class="uk-alert-close" uk-close=""></a>
+          <p class="uk-text-center">${text}</p></div>`);
+    },
+
     cleanPlayerBalance: function() {
         $("#player-balance").children().remove();
     },
@@ -149,7 +167,6 @@ window.App = {
         if (balance > bet) {
             $("#web3-play-with-balance").prop('disabled', false);
         }
-        console.log(balance,bet);
     },
 
     refreshPlayerBalance: function(balance) {
