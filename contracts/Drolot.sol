@@ -94,8 +94,10 @@ contract Drolot is Owned, Withdrawable, Pausable {
         bet = newBet;
         lot = newLot;
         fees = newFees;
+        if (newMaxPlayers > maxPlayers){
+            players.length = maxPlayers;
+        }
         maxPlayers = newMaxPlayers;
-        players.length = maxPlayers;
     }
 
     function play(address sender) internal{
