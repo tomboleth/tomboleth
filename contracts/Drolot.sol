@@ -56,7 +56,8 @@ contract Pausable is Owned {
 
 contract Drolot is Owned, Withdrawable, Pausable {
     uint public partyPlayed = 0;
-    address[10] public players;
+//    address[10] public players;
+    address[] public players;
     uint public numPlayers = 0;
     uint public maxPlayers = 10 ;
     uint public bet = 100 finney;
@@ -74,6 +75,10 @@ contract Drolot is Owned, Withdrawable, Pausable {
         bytes12 indexed message
     );
 
+    function Drolot() {
+        players.length = maxPlayers;
+    }
+
     function () payable ifActive {
         require(msg.value == bet);
         play(msg.sender);
@@ -90,6 +95,7 @@ contract Drolot is Owned, Withdrawable, Pausable {
         lot = newLot;
         fees = newFees;
         maxPlayers = newMaxPlayers;
+        players.length = maxPlayers;
     }
 
     function play(address sender) internal{
@@ -113,7 +119,8 @@ contract Drolot is Owned, Withdrawable, Pausable {
     }
 
     function insertPlayer(address player) internal {
-        players[numPlayers++] = player;
+        //players[numPlayers++] = player;
+        players.push(player);
     }
 
     function clearPlayers() internal {
