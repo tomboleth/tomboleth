@@ -75,10 +75,11 @@ window.App = {
                         instance.contract.bet.call(function(error, result){
 				try{
 					web3.eth.sendTransaction({from:web3.eth.accounts[0],to: contract, value: result, gas: 100000},
-					    function(e,r){self.addInfo(r)});
+                        function(e,r){self.handleTransaction(e,r);});
 				}
 				catch (e){
-					self.addAlert("We had a problem, if you are using Metamask, is it unlocked ?");
+                    console.log(e);
+					self.addAlert("We had a problem, if you are using a web3 browser, is you accont unlocked ?");
 				}
                         });
                     });
@@ -139,11 +140,18 @@ window.App = {
 
     },
 
+    handleTransaction: function(error, transaction){
+        if (typeof transaction != 'undefined') {
+            $("#alert").append(`<div class="uk-alert-succes" uk-alert=""><a class="uk-alert-close" uk-close=""></a>
+                          <p class="uk-text-center">Transaction pending, you can see it on
+                          <a href="https://ropsten.etherscan.io/tx/${transaction}">Etherscan</a></p></div>`);}
+        else { addAlert('Uh oh, something went wrong');}
+    },
+
     addInfo: function(text){
 	$("#alert").append(`<div class="uk-alert-succes" uk-alert="">
           <a class="uk-alert-close" uk-close=""></a>
-          <p class="uk-text-center">Transaction pending, you can see it on <a href="https:/ropsten.etherscan.io/tx/${text}">
-          Etherscan</a></p></div>`);
+          <p class="uk-text-center">${text}</p></div>`);
     },
 
     addAlert: function(text){
